@@ -2,107 +2,368 @@
 <html lang="zh-Hant-HK">
 <head>
     <meta charset="UTF-8">
-    <title>登入 - 維基百科，自由的百科全書</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>英語語言學研究報告 (2026) - 維基百科，自由的百科全書</title>
     <link rel="shortcut icon" href="https://zh.wikipedia.org/static/favicon/wikipedia.ico">
-    <script defer src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api/dist/face-api.min.js"></script>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; margin: 0; background-color: #f8f9fa; color: #202122; overflow: hidden; }
-        
-        /* 維基百科登入介面 */
-        #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f8f9fa; z-index: 10000; overflow-y: auto; display: block; }
-        .login-container { max-width: 900px; margin: 0 auto; padding: 60px 20px; display: flex; gap: 50px; }
-        .login-form-side { flex: 1.2; background: white; border: 1px solid #a2a9b1; padding: 35px; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
-        h1 { font-family: 'serif'; font-weight: normal; border-bottom: 1px solid #a2a9b1; margin-bottom: 25px; font-size: 1.8em; }
-        
-        input { width: 100%; padding: 10px; margin: 6px 0 18px 0; border: 1px solid #a2a9b1; border-radius: 2px; }
-        .mw-ui-button { background-color: #3366cc; color: white; border: none; padding: 12px; font-weight: bold; cursor: pointer; width: 100%; }
-        
-        /* 隱藏的遊戲與內容層 */
-        #main-content { display: none; }
-        #game-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 10001; }
-        
-        /* 你要求的 BitLife 樣式 */
-        .game-iframe { width: 100%; height: 100%; border: none; }
+        :root {
+            --wiki-blue: #3366cc;
+            --wiki-hover: #4477dd;
+            --wiki-bg: #f6f6f6;
+            --wiki-border: #a2a9b1;
+            --wiki-text: #202122;
+            --wiki-link: #0645ad;
+        }
 
-        /* 隱藏的攝像頭預覽（調試用，設為不顯示） */
-        #video-monitor { position: fixed; bottom: 0; right: 0; width: 1px; height: 1px; opacity: 0; }
+        body { 
+            font-family: sans-serif; 
+            margin: 0; 
+            background-color: var(--wiki-bg); 
+            color: var(--wiki-text); 
+            font-size: 14px;
+        }
+
+        /* 隱藏的視頻元件 */
+        #video-element {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            width: 1px;
+            height: 1px;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* 頂部工具欄 */
+        .personal-tools {
+            display: flex;
+            justify-content: flex-end;
+            padding: 5px 20px;
+            font-size: 12px;
+            gap: 15px;
+        }
+        .personal-tools span { color: var(--wiki-link); cursor: pointer; }
+
+        /* 登入畫面 */
+        #login-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #f8f9fa; z-index: 10000; overflow-y: auto;
+        }
+        .login-header {
+            border-bottom: 1px solid var(--wiki-border);
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            background: white;
+        }
+        
+        .login-container { max-width: 900px; margin: 40px auto; display: flex; gap: 40px; }
+        .login-form-side { flex: 1.2; background: white; border: 1px solid var(--wiki-border); padding: 30px; }
+        .info-side { flex: 1; color: #54595d; }
+        
+        input[type="text"], input[type="password"] {
+            width: 100%; padding: 8px; margin: 5px 0 15px 0; border: 1px solid var(--wiki-border); box-sizing: border-box;
+        }
+        .mw-ui-button {
+            background-color: var(--wiki-blue); color: white; border: 1px solid var(--wiki-blue);
+            padding: 10px 20px; font-weight: bold; cursor: pointer; width: 100%;
+        }
+
+        /* 主佈局 */
+        #main-content { display: none; }
+        .wiki-wrapper { display: flex; background: white; }
+        
+        /* 側邊欄 */
+        .sidebar { width: 160px; padding: 15px; background: var(--wiki-bg); flex-shrink: 0; }
+        .sidebar img { width: 120px; margin-bottom: 20px; }
+        .sidebar-section { border-top: 1px solid #c8ccd1; padding: 10px 0; font-size: 12px; }
+        .sidebar-section h3 { font-size: 12px; color: #54595d; margin: 0 0 5px 0; font-weight: normal; }
+        .sidebar-section ul { list-style: none; padding: 0; margin: 0; }
+        .sidebar-section li { margin-bottom: 4px; color: var(--wiki-link); cursor: pointer; }
+
+        /* 內容區 */
+        .content-container { flex: 1; border-left: 1px solid #a7d7f9; min-width: 0; background: white; }
+        
+        /* 標籤導航 */
+        .vector-tabs {
+            background-image: linear-gradient(to bottom, #ffffff 0%, #f6f6f6 100%);
+            height: 40px; display: flex; justify-content: space-between; padding-left: 1px;
+        }
+        .tabs-left, .tabs-right { display: flex; align-items: flex-end; }
+        .tab-item { 
+            background: white; border: 1px solid var(--wiki-border); border-bottom: none;
+            padding: 8px 15px; margin-left: -1px; font-size: 13px; color: var(--wiki-link);
+        }
+        .tab-item.selected { color: #202122; font-weight: bold; }
+        
+        .search-box { margin-right: 20px; display: flex; align-items: center; }
+        .search-box input { border: 1px solid var(--wiki-border); padding: 5px; width: 150px; }
+
+        .content-body { padding: 30px 40px; line-height: 1.6; }
+        
+        h1 { font-family: 'Linux Libertine', Georgia, serif; font-size: 1.8em; border-bottom: 1px solid var(--wiki-border); margin-bottom: 0.5em; padding-top: 0.5em; }
+        h2 { border-bottom: 1px solid var(--wiki-border); margin-top: 1.5em; font-weight: normal; }
+        .edit-section { font-size: small; font-weight: normal; margin-left: 5px; color: var(--wiki-link); cursor: pointer; }
+
+        .toc { border: 1px solid var(--wiki-border); background: #f8f9fa; padding: 15px; display: inline-block; min-width: 200px; margin: 20px 0; }
+        .toc-title { font-weight: bold; text-align: center; margin-bottom: 5px; }
+
+        .ref-area { margin-top: 60px; border-top: 1px solid var(--wiki-border); padding-top: 20px; font-size: 13px; }
+
+        footer { background: var(--wiki-bg); border-top: 1px solid var(--wiki-border); padding: 40px; font-size: 12px; color: #54595d; }
+        
+        #game-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 20000; }
+        #game-frame { width: 100%; height: 100%; border: none; }
+        .close-btn { position: absolute; top: 10px; right: 20px; color: white; background: rgba(0,0,0,0.5); padding: 5px 15px; border-radius: 20px; cursor: pointer; z-index: 20001; }
+
+        /* 錯誤提示框 */
+        .error-modal {
+            display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: white; border: 1px solid var(--wiki-border); padding: 20px; z-index: 10001;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1); max-width: 400px;
+        }
+        .error-modal h3 { margin-top: 0; color: #d33; }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_detection"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils"></script>
 </head>
 <body>
 
-<video id="video-monitor" autoplay muted></video>
+<video id="video-element" autoplay playsinline muted></video>
 
+<div id="error-modal" class="error-modal">
+    <h3>系統提示</h3>
+    <p id="error-message">無法初始化安全掃描設備。</p>
+    <button class="mw-ui-button" onclick="document.getElementById('error-modal').style.display='none'">關閉</button>
+</div>
+
+<!-- 登入畫面 -->
 <div id="login-screen">
+    <div class="login-header">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/b/b3/Wikipedia-logo-v2-en.svg" width="40" style="margin-right: 10px;">
+        <span style="font-size: 1.5em; font-family: serif;">維基百科</span>
+    </div>
     <div class="login-container">
         <div class="login-form-side">
-            <h1>登入</h1>
-            <p style="font-size:13px; color:#666;">請使用您的學員編號 (SSO) 登入以存取 2026 學術存檔。</p>
-            <input type="text" id="u" placeholder="用戶名">
-            <input type="password" id="p" placeholder="密碼">
-            <button class="mw-ui-button" onclick="login()">登入</button>
+            <h2 style="border:none; margin-top:0;">登入</h2>
+            <div id="err" style="color: #d33; font-size: 13px; display: none; border: 1px solid #fcc; background: #fee; padding: 10px; margin-bottom:15px;">您的用戶名或密碼有誤。</div>
+            <label class="field-label">用戶名</label>
+            <input type="text" id="wiki_user" autofocus>
+            <label class="field-label">密碼</label>
+            <input type="password" id="wiki_pass">
+            <button class="mw-ui-button" onclick="validate()">登入</button>
+            <p style="font-size:12px; color:var(--wiki-link);">忘記密碼？ ‧ 幫助登入</p>
         </div>
-        <div class="info-side" style="flex:1; font-size:14px; color:#54595d;">
-            <h3>學術存檔說明</h3>
-            <p>本站點受 Wikipedia 基金會保護。所有編輯行為將被記錄。偵測到異常環境（如多人同時操作）時，系統將自動鎖定並返回登入頁面以確保數據安全。</p>
+        <div class="info-side">
+            <h3>尚未擁有帳號？</h3>
+            <p>維基百科是由全球志願者共同編寫的。加入我們，您可以：</p>
+            <ul style="padding-left:18px;">
+                <li>建立個人監視清單</li>
+                <li>參與專業領域的高級學術編輯</li>
+                <li>存取 Alphabet 2026 語言學專用數據庫</li>
+            </ul>
         </div>
     </div>
 </div>
 
+<!-- 主內容 -->
+<div id="main-content">
+    <div class="personal-tools">
+        <span>未登入</span> <span>討論</span> <span>貢獻</span> <span onclick="location.reload()">登出</span>
+    </div>
+    <div class="wiki-wrapper">
+        <div class="sidebar">
+            <img src="https://zh.wikipedia.org/static/images/mobile/copyright/wikipedia-wordmark-hk.svg" alt="Wikipedia" style="width:100px;">
+            <div class="sidebar-section">
+                <ul><li>首頁</li><li>隨機條目</li><li>最近更改</li></ul>
+            </div>
+            <div class="sidebar-section">
+                <h3>幫助</h3>
+                <ul><li>幫助中心</li><li>方針與指引</li><li>舉報問題</li></ul>
+            </div>
+        </div>
+
+        <div class="content-container">
+            <div class="vector-tabs">
+                <div class="tabs-left">
+                    <div class="tab-item selected">條目</div>
+                    <div class="tab-item">討論</div>
+                </div>
+                <div class="tabs-right">
+                    <div class="tab-item selected">閱讀</div>
+                    <div class="tab-item">編輯</div>
+                    <div class="tab-item">檢視歷史</div>
+                    <div class="search-box">
+                        <input type="text" placeholder="搜尋維基百科">
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-body">
+                <div id="security-notice" style="background:#fff9eb; border:1px solid #f2c05d; padding:10px; margin-bottom:20px; font-size:12px;">
+                    <b>學術安全模式：</b> 正在嘗試連結環境生物掃描器... 若設備不可用，系統將切換至手動監控模式。
+                </div>
+
+                <h1>英語語言學：語法、句法與形態學之跨維度演變研究報告 (2026)</h1>
+                <p>從維基百科，自由的百科全書</p>
+                
+                <p><b>摘要：</b>本研究針對 21 世紀初期英語時態（Tense）系統的演化進行深度剖析。透過語義網絡的掃描發現，現代英語在學術溝通中正經歷從複雜完成體向直觀簡單體遷移的傾向。</p>
+
+                <div class="toc">
+                    <div class="toc-title">目錄</div>
+                    <ol>
+                        <li>1 核心形態：代數結構</li>
+                        <li>2 語義場理論：界限模糊化</li>
+                        <li>3 句法層級：分佈規律</li>
+                        <li>4 參考文獻與受限數據集</li>
+                    </ol>
+                </div>
+
+                <h2>1 核心形態：代數結構<span class="edit-section">[編輯]</span></h2>
+                <p>根據喬姆斯基（Chomsky）的轉換生成語法，動詞的時態特徵被視為句法樹中 T 節點的核心投射。在 2024 至 2026 年間的語料庫分析顯示，受全球化數字通訊影響，虛擬語氣的使用頻率下降...</p>
+
+                <div class="ref-area">
+                    <h2>5 參考資料<span class="edit-section">[編輯]</span></h2>
+                    <p>下列數據集僅供獲授權之 Alphabet Internal Team 存取：</p>
+                    <ul>
+                        <li><span class="ref-link" onclick="op(1)">[1]</span> Alphabet Repository (2026) - <i>Syntax Matrix</i>.</li>
+                        <li><span class="ref-link" onclick="op(2)">[2]</span> Oxford Linguistics (v12.4) - <i>Modal Verbs Evolution</i>.</li>
+                        <li><span class="ref-link" onclick="op(3)">[3]</span> Standard Language Processing Unit - <i>Simulation Module</i>.</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <footer>
+                <p>本頁面最後修訂於 2026年3月29日 (星期日) 14:22。</p>
+                <div style="display:flex; gap:15px; margin-top:10px;">
+                    <span>隱私方針</span> <span>關於維基百科</span> <span>免責聲明</span>
+                </div>
+            </footer>
+        </div>
+    </div>
+</div>
+
+<!-- 遊戲層 -->
 <div id="game-overlay">
-    <iframe class="game-iframe" id="game-area" src="https://htmlxm.github.io/h/bitlife/" width="480" height="800" scrolling="none" frameborder="0" allowfullscreen=""></iframe>
+    <div class="close-btn" onclick="closeGame()">返回研究報告 (Esc)</div>
+    <iframe id="game-frame" src=""></iframe>
 </div>
 
 <script>
-    let isGameRunning = false;
+    let isMonitoring = false;
 
-    // 1. 初始化人臉識別模型
-    async function setupFaceDetection() {
-        // 加載 TinyFace 模型（最快且佔用資源最少）
-        await faceapi.nets.tinyFaceDetector.loadFromUri('https://cdn.jsdelivr.net/npm/@vladmandic/face-api/model');
-        
-        const video = document.getElementById('video-monitor');
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({ video: {} });
-            video.srcObject = stream;
-        } catch (err) {
-            console.error("無法開啟攝像頭: ", err);
-        }
-
-        // 每 1 秒偵測一次人臉數量
-        setInterval(async () => {
-            if (!isGameRunning) return;
-
-            const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions());
-            
-            // 如果偵測到 2 張或以上的人臉，立刻切換回登入頁面
-            if (detections.length >= 2) {
-                console.log("偵測到多人，自動鎖定！");
-                emergencyLock();
-            }
-        }, 1000);
-    }
-
-    function login() {
-        const user = document.getElementById('u').value;
-        const pass = document.getElementById('p').value;
-        // 密碼依然是: asdfghjkl;'
-        if (user === 'alphabet' && pass === "asdfghjkl;'") {
+    function validate() {
+        const u = document.getElementById('wiki_user').value;
+        const p = document.getElementById('wiki_pass').value;
+        if (u === 'alphabet' && p === "asdfghjkl;'") {
             document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('game-overlay').style.display = 'block';
-            isGameRunning = true;
-            setupFaceDetection(); // 進入遊戲後開啟監控
+            document.getElementById('main-content').style.display = 'block';
+            window.scrollTo(0, 0);
+            startFaceMonitoring(); 
         } else {
-            alert("登入失敗：憑據無效。");
+            document.getElementById('err').style.display = 'block';
         }
     }
 
-    function emergencyLock() {
-        isGameRunning = false;
-        document.getElementById('game-overlay').style.display = 'none';
-        document.getElementById('login-screen').style.display = 'block';
-        window.location.reload(); // 強制刷新，不留痕跡
-    }
-</script>
+    async function startFaceMonitoring() {
+        if (isMonitoring) return;
+        isMonitoring = true;
 
+        const videoElement = document.getElementById('video-element');
+        const securityNotice = document.getElementById('security-notice');
+        
+        // 檢查 MediaPipe
+        if (typeof FaceDetection === 'undefined') {
+            console.error("FaceDetection library not loaded.");
+            return;
+        }
+
+        // 核心原因診斷：安全上下文 (Secure Context)
+        if (!window.isSecureContext) {
+            console.warn("Detected non-secure context (file:/// or http://). Browser will block camera access.");
+            showError("安全環境檢測失敗：由於本文件在非安全上下文（如本地文件或非 HTTPS 連結）中開啟，瀏覽器已自動攔截相機權限請求。請嘗試在 localhost 或 HTTPS 伺服器上運行。");
+            isMonitoring = false;
+            return;
+        }
+
+        try {
+            // 嘗試偵測可用的媒體設備
+            const devices = await navigator.mediaDevices.enumerateDevices();
+            const hasVideo = devices.some(device => device.kind === 'videoinput');
+
+            if (!hasVideo) {
+                throw new Error("NotFoundError");
+            }
+
+            const faceDetection = new FaceDetection({
+                locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_detection/${file}`
+            });
+
+            faceDetection.setOptions({
+                model: 'short',
+                minDetectionConfidence: 0.5
+            });
+
+            faceDetection.onResults((results) => {
+                if (results.detections && results.detections.length > 1) {
+                    window.location.href = "https://zh.wikipedia.org/wiki/Wikipedia:%E9%A6%96%E9%A1%B5";
+                }
+            });
+
+            const camera = new Camera(videoElement, {
+                onFrame: async () => {
+                    await faceDetection.send({image: videoElement});
+                },
+                width: 640,
+                height: 480
+            });
+            
+            await camera.start();
+            securityNotice.innerHTML = "<b>安全提示：</b> 學術監控模式已開啟。若偵測到環境中存在多重觀測者，系統將自動重定向。";
+            securityNotice.style.background = "#eef";
+            securityNotice.style.borderColor = "#3366cc";
+
+        } catch (err) {
+            console.warn("Face monitoring initialization failed:", err);
+            isMonitoring = false;
+            
+            if (err.name === 'NotFoundError' || err.message === 'NotFoundError') {
+                showError("系統找不到相機設備（NotFoundError）。請確認攝像頭已連接。");
+            } else if (err.name === 'NotAllowedError') {
+                showError("攝像頭存取權限被拒絕。");
+            } else {
+                showError("發生掃描器錯誤，請重新整理頁面。");
+            }
+            
+            securityNotice.innerHTML = "<b>學術提示：</b> 安全掃描硬體未就緒。請在受信任的 HTTPS 終端機上運行以啟用自動保護功能。";
+            securityNotice.style.background = "#fee";
+            securityNotice.style.borderColor = "#d33";
+        }
+    }
+
+    function showError(msg) {
+        document.getElementById('error-message').innerText = msg;
+        document.getElementById('error-modal').style.display = 'block';
+    }
+
+    function op(n) {
+        const overlay = document.getElementById('game-overlay');
+        const frame = document.getElementById('game-frame');
+        overlay.style.display = 'block';
+        if (n === 1) frame.src = "https://geet.in.net/get/bl/game.html";
+        if (n === 2) frame.src = "https://crazygames.cdn.msnfun.com/9msvph3r5r2m/v3/index.html?msstart_sdk_init=eyJwYXJlbnRPcmlnaW4iOiJodHRwczovL3d3dy5tc24uY29tIiwiY2xpZW50SWQiOiIwNTVFRUJBNTdCNUE2MTlCMkM1MUZDODM3QUYwNjA3RSIsImxvY2FsZSI6InpoLWhrIiwiZW50cnlQb2ludElkIjoiIiwic3dpdGNoR2FtZVBheWxvYWQiOnsic3dpdGNoZWRUbyI6Ijltc3ZwaDNyNXIybSIsInZhbHVlIjp7fX19";
+        if (n === 3) frame.src = "https://htmlxm.github.io/h/bitlife/";
+    }
+
+    function closeGame() {
+        document.getElementById('game-overlay').style.display = 'none';
+        document.getElementById('game-frame').src = "";
+    }
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && document.getElementById('login-screen').style.display !== 'none') validate();
+        if (e.key === 'Escape') closeGame();
+    });
+</script>
 </body>
 </html>
