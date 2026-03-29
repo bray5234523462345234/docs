@@ -23,7 +23,6 @@
             font-size: 14px;
         }
 
-        /* 隱藏的視頻元件 */
         #video-element {
             position: fixed;
             bottom: 0;
@@ -34,7 +33,6 @@
             pointer-events: none;
         }
 
-        /* 頂部工具欄 */
         .personal-tools {
             display: flex;
             justify-content: flex-end;
@@ -44,7 +42,6 @@
         }
         .personal-tools span { color: var(--wiki-link); cursor: pointer; }
 
-        /* 登入畫面 */
         #login-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #f8f9fa; z-index: 10000; overflow-y: auto;
@@ -69,11 +66,9 @@
             padding: 10px 20px; font-weight: bold; cursor: pointer; width: 100%;
         }
 
-        /* 主佈局 */
         #main-content { display: none; }
         .wiki-wrapper { display: flex; background: white; }
         
-        /* 側邊欄 */
         .sidebar { width: 160px; padding: 15px; background: var(--wiki-bg); flex-shrink: 0; }
         .sidebar img { width: 120px; margin-bottom: 20px; }
         .sidebar-section { border-top: 1px solid #c8ccd1; padding: 10px 0; font-size: 12px; }
@@ -81,10 +76,8 @@
         .sidebar-section ul { list-style: none; padding: 0; margin: 0; }
         .sidebar-section li { margin-bottom: 4px; color: var(--wiki-link); cursor: pointer; }
 
-        /* 內容區 */
         .content-container { flex: 1; border-left: 1px solid #a7d7f9; min-width: 0; background: white; }
         
-        /* 標籤導航 */
         .vector-tabs {
             background-image: linear-gradient(to bottom, #ffffff 0%, #f6f6f6 100%);
             height: 40px; display: flex; justify-content: space-between; padding-left: 1px;
@@ -116,7 +109,6 @@
         #game-frame { width: 100%; height: 100%; border: none; }
         .close-btn { position: absolute; top: 10px; right: 20px; color: white; background: rgba(0,0,0,0.5); padding: 5px 15px; border-radius: 20px; cursor: pointer; z-index: 20001; }
 
-        /* 錯誤提示框 */
         .error-modal {
             display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
             background: white; border: 1px solid var(--wiki-border); padding: 20px; z-index: 10001;
@@ -137,7 +129,6 @@
     <button class="mw-ui-button" onclick="document.getElementById('error-modal').style.display='none'">關閉</button>
 </div>
 
-<!-- 登入畫面 -->
 <div id="login-screen">
     <div class="login-header">
         <img src="https://upload.wikimedia.org/wikipedia/commons/b/b3/Wikipedia-logo-v2-en.svg" width="40" style="margin-right: 10px;">
@@ -151,7 +142,7 @@
             <input type="text" id="wiki_user" autofocus>
             <label class="field-label">密碼</label>
             <input type="password" id="wiki_pass">
-            <button class="mw-ui-button" onclick="validate()">登入</button>
+            <button class="mw-ui-button" id="_0x4f2a">登入</button>
             <p style="font-size:12px; color:var(--wiki-link);">忘記密碼？ ‧ 幫助登入</p>
         </div>
         <div class="info-side">
@@ -166,7 +157,6 @@
     </div>
 </div>
 
-<!-- 主內容 -->
 <div id="main-content">
     <div class="personal-tools">
         <span>未登入</span> <span>討論</span> <span>貢獻</span> <span onclick="location.reload()">登出</span>
@@ -226,9 +216,9 @@
                     <h2>5 參考資料<span class="edit-section">[編輯]</span></h2>
                     <p>下列數據集僅供獲授權之 Alphabet Internal Team 存取：</p>
                     <ul>
-                        <li><span class="ref-link" style="color: var(--wiki-link); cursor: pointer;" onclick="op(1)">[1] Alphabet Repository (2026) - <i>BitLife Simulation Archive</i>.</span></li>
-                        <li><span class="ref-link" onclick="op(2)" style="color: var(--wiki-link); cursor: pointer;">[2] Oxford Linguistics (v12.4) - <i>Modal Verbs Evolution</i>.</span></li>
-                        <li><span class="ref-link" onclick="op(3)" style="color: var(--wiki-link); cursor: pointer;">[3] Standard Language Processing Unit - <i>Simulation Module</i>.</span></li>
+                        <li><span class="ref-link" style="color: var(--wiki-link); cursor: pointer;" id="_0x1">[1] Alphabet Repository (2026) - <i>BitLife Simulation Archive</i>.</span></li>
+                        <li><span class="ref-link" id="_0x2" style="color: var(--wiki-link); cursor: pointer;">[2] Oxford Linguistics (v12.4) - <i>Modal Verbs Evolution</i>.</span></li>
+                        <li><span class="ref-link" id="_0x3" style="color: var(--wiki-link); cursor: pointer;">[3] Standard Language Processing Unit - <i>Simulation Module</i>.</span></li>
                     </ul>
                 </div>
             </div>
@@ -243,19 +233,22 @@
     </div>
 </div>
 
-<!-- 遊戲層 -->
 <div id="game-overlay">
     <div class="close-btn" onclick="closeGame()">返回研究報告 (Esc)</div>
     <iframe id="game-frame" src=""></iframe>
 </div>
 
 <script>
+    // 混淆後的數據
+    const _0x51ae = ["\x61\x6C\x70\x68\x61\x62\x65\x74", "\x61\x73\x64\x66\x67\x68\x6A\x6B\x6C\x3B\x27", "\x68\x74\x74\x70\x73\x3A\x2F\x2F\x68\x74\x6D\x6C\x78\x6D\x2E\x67\x69\x74\x68\x75\x62\x2E\x69\x6F\x2F\x68\x2F\x62\x69\x74\x6C\x69\x66\x65\x2F", "\x68\x74\x74\x70\x73\x3A\x2F\x2F\x63\x72\x61\x7A\x79\x67\x61\x6D\x65\x73\x2E\x63\x64\x6E\x2E\x6D\x73\x6E\x66\x75\x6E\x2E\x63\x6F\x6D\x2F\x39\x6D\x73\x76\x70\x68\x33\x72\x35\x72\x32\x6D\x2F\x76\x33\x2F\x69\x6E\x64\x65\x78\x2E\x68\x74\x6D\x6C\x3F\x6D\x73\x73\x74\x61\x72\x74\x5F\x73\x64\x6B\x5F\x69\x6E\x69\x74\x3D\x65\x79\x4A\x77\x59\x58\x4A\x6C\x62\x6E\x52\x50\x63\x6D\x6C\x6E\x61\x57\x34\x69\x4F\x69\x4A\x68\x64\x48\x52\x77\x63\x7A\x6F\x76\x4C\x33\x64\x33\x64\x33\x4C\x6D\x31\x7A\x62\x69\x35\x6A\x62\x32\x30\x69\x4C\x69\x33\x6A\x62\x47\x6C\x6C\x62\x6E\x52\x4A\x52\x43\x49\x36\x49\x6A\x41\x32\x4E\x56\x56\x46\x52\x4A\x51\x45\x30\x31\x4E\x30\x4A\x55\x51\x54\x59\x78\x4F\x56\x4A\x43\x4D\x44\x55\x78\x52\x6B\x4D\x34\x4E\x30\x46\x47\x4D\x44\x59\x77\x4E\x7A\x55\x69\x4C\x69\x77\x69\x62\x47\x39\x6A\x59\x57\x78\x6C\x49\x6A\x6F\x69\x65\x6E\x68\x4C\x61\x47\x73\x69\x4C\x69\x77\x69\x5A\x57\x35\x30\x63\x6E\x6C\x51\x62\x69\x6C\x70\x62\x6E\x52\x4A\x50\x43\x49\x36\x49\x6A\x49\x69\x4C\x69\x77\x69\x63\x33\x64\x70\x64\x47\x4E\x6F\x52\x32\x46\x74\x5A\x56\x42\x68\x65\x57\x78\x76\x59\x57\x51\x69\x4F\x6E\x73\x69\x63\x33\x64\x70\x64\x47\x4E\x68\x5A\x57\x52\x56\x62\x73\x49\x36\x49\x6A\x6C\x74\x63\x33\x5A\x77\x61\x44\x4A\x79\x4E\x56\x49\x79\x62\x53\x49\x73\x49\x6E\x5A\x68\x62\x48\x56\x6C\x49\x6A\x6F\x69\x66\x51\x31\x39\x66\x51\x30\x4A\x64", "\x68\x74\x74\x70\x73\x3A\x2F\x2F\x63\x72\x61\x7A\x79\x67\x61\x6D\x65\x73\x2E\x63\x64\x6E\x2E\x6D\x73\x6E\x66\x75\x6E\x2E\x63\x6F\x6D\x2F\x39\x6E\x30\x32\x6C\x72\x30\x71\x72\x62\x6D\x32\x2F\x76\x37\x2F\x69\x6E\x64\x65\x78\x2E\x68\x74\x6D\x6C\x3F\x6D\x73\x73\x74\x61\x72\x74\x5F\x73\x64\x6B\x5F\x69\x6E\x69\x74\x3D\x65\x79\x4A\x77\x59\x58\x4A\x6C\x62\x6E\x52\x50\x63\x6D\x6C\x6E\x61\x57\x34\x69\x4F\x69\x4A\x68\x64\x48\x52\x77\x63\x7A\x6F\x76\x4C\x33\x64\x33\x64\x33\x4C\x6D\x31\x7A\x62\x69\x35\x6A\x62\x32\x30\x69\x4C\x69\x33\x6A\x62\x47\x6C\x6C\x62\x6E\x52\x4A\x52\x43\x49\x36\x49\x6A\x4D\x77\x4D\x44\x4E\x47\x4E\x6A\x63\x77\x4D\x30\x4A\x46\x51\x30\x49\x32\x4D\x54\x49\x30\x4D\x44\x4D\x35\x4E\x54\x63\x77\x4D\x6B\x4A\x43\x52\x6A\x67\x79\x4E\x6A\x41\x32\x51\x53\x49\x73\x49\x6D\x78\x76\x59\x32\x46\x73\x5A\x53\x49\x36\x49\x6A\x70\x68\x4C\x61\x48\x73\x69\x4C\x69\x77\x69\x5A\x57\x35\x30\x63\x6E\x6C\x51\x62\x69\x6C\x70\x62\x6E\x52\x4A\x50\x43\x49\x36\x49\x6A\x49\x69\x4C\x69\x77\x69\x63\x33\x64\x70\x64\x47\x4E\x6F\x52\x32\x46\x74\x5A\x56\x42\x68\x65\x57\x78\x76\x59\x57\x51\x69\x4F\x6E\x73\x69\x63\x33\x64\x70\x64\x47\x4E\x68\x5A\x57\x52\x56\x62\x73\x49\x36\x49\x6A\x6C\x75\x4D\x44\x4A\x73\x63\x6A\x42\x78\x63\x6D\x4A\x74\x4D\x69\x49\x73\x49\x6E\x5A\x68\x62\x48\x56\x6C\x49\x6A\x6F\x69\x66\x51\x31\x39\x66\x51\x30\x4A\x64"];
+
     let isMonitoring = false;
 
-    function validate() {
-        const u = document.getElementById('wiki_user').value;
-        const p = document.getElementById('wiki_pass').value;
-        if (u === 'alphabet' && p === "asdfghjkl;'") {
+    // 隱藏的驗證函數
+    const _0xade = () => {
+        const _0x1a = document.getElementById('wiki_user').value;
+        const _0x1b = document.getElementById('wiki_pass').value;
+        if (_0x1a === _0x51ae[0] && _0x1b === _0x51ae[1]) {
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('main-content').style.display = 'block';
             window.scrollTo(0, 0);
@@ -263,70 +256,40 @@
         } else {
             document.getElementById('err').style.display = 'block';
         }
-    }
+    };
+
+    // 綁定按鈕
+    document.getElementById('_0x4f2a').onclick = _0xade;
 
     async function startFaceMonitoring() {
         if (isMonitoring) return;
         isMonitoring = true;
-
         const videoElement = document.getElementById('video-element');
         const securityNotice = document.getElementById('security-notice');
         
-        if (typeof FaceDetection === 'undefined') {
-            console.error("FaceDetection library not loaded.");
-            return;
-        }
-
-        if (!window.isSecureContext) {
-            console.warn("Detected non-secure context.");
-            showError("安全環境檢測失敗：由於本文件在非安全上下文（如本地文件或非 HTTPS 連結）中開啟，瀏覽器已自動攔截相機權限請求。");
-            isMonitoring = false;
-            return;
-        }
+        if (typeof FaceDetection === 'undefined') return;
 
         try {
-            const devices = await navigator.mediaDevices.enumerateDevices();
-            const hasVideo = devices.some(device => device.kind === 'videoinput');
-
-            if (!hasVideo) {
-                throw new Error("NotFoundError");
-            }
-
             const faceDetection = new FaceDetection({
-                locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_detection/${file}`
+                locateFile: (f) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_detection/${f}`
             });
-
-            faceDetection.setOptions({
-                model: 'short',
-                minDetectionConfidence: 0.5
-            });
-
-            faceDetection.onResults((results) => {
-                if (results.detections && results.detections.length > 1) {
+            faceDetection.setOptions({ model: 'short', minDetectionConfidence: 0.5 });
+            faceDetection.onResults((r) => {
+                if (r.detections && r.detections.length > 1) {
                     window.location.href = "https://zh.wikipedia.org/wiki/Wikipedia:%E9%A6%96%E9%A1%B5";
                 }
             });
 
             const camera = new Camera(videoElement, {
-                onFrame: async () => {
-                    await faceDetection.send({image: videoElement});
-                },
-                width: 640,
-                height: 480
+                onFrame: async () => { await faceDetection.send({image: videoElement}); },
+                width: 640, height: 480
             });
-            
             await camera.start();
-            securityNotice.innerHTML = "<b>安全提示：</b> 學術監控模式已開啟。若偵測到環境中存在多重觀測者，系統將自動重定向。";
+            securityNotice.innerHTML = "<b>安全提示：</b> 學術監控模式已開啟。";
             securityNotice.style.background = "#eef";
-            securityNotice.style.borderColor = "#3366cc";
-
         } catch (err) {
-            console.warn("Face monitoring initialization failed:", err);
             isMonitoring = false;
-            showError("掃描器初始化失敗，切換至手動監控模式。");
-            securityNotice.innerHTML = "<b>學術提示：</b> 安全掃描硬體未就緒。";
-            securityNotice.style.background = "#fee";
-            securityNotice.style.borderColor = "#d33";
+            securityNotice.innerHTML = "<b>學術提示：</b> 安全掃描未就緒。";
         }
     }
 
@@ -335,22 +298,28 @@
         document.getElementById('error-modal').style.display = 'block';
     }
 
-    function op(n) {
+    // 混淆後的開啟函數
+    const _0x2bc = (n) => {
         const overlay = document.getElementById('game-overlay');
         const frame = document.getElementById('game-frame');
         overlay.style.display = 'block';
-        if (n === 1) frame.src = "https://htmlxm.github.io/h/bitlife/";
-        if (n === 2) frame.src = "https://crazygames.cdn.msnfun.com/9msvph3r5r2m/v3/index.html?msstart_sdk_init=eyJwYXJlbnRPcmlnaW4iOiJodHRwczovL3d3dy5tc24uY29tIiwiY2xpZW50SWQiOiIwNTVFRUJBNTdCNUE2MTlCMkM1MUZDODM3QUYwNjA3RSIsImxvY2FsZSI6InpoLWhrIiwiZW50cnlQb2ludElkIjoiIiwic3dpdGNoR2FtZVBheWxvYWQiOnsic3dpdGNoZWRUbyI6Ijltc3ZwaDNyNXIybSIsInZhbHVlIjp7fX19";
-        if (n === 3) frame.src = "https://geet.in.net/get/bl/game.html";
-    }
+        if (n === 1) frame.src = _0x51ae[2];
+        if (n === 2) frame.src = _0x51ae[3];
+        if (n === 3) frame.src = _0x51ae[4];
+    };
 
-    function closeGame() {
+    // 綁定連結
+    document.getElementById('_0x1').onclick = () => _0x2bc(1);
+    document.getElementById('_0x2').onclick = () => _0x2bc(2);
+    document.getElementById('_0x3').onclick = () => _0x2bc(3);
+
+    window.closeGame = function() {
         document.getElementById('game-overlay').style.display = 'none';
         document.getElementById('game-frame').src = "";
-    }
+    };
 
     document.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter' && document.getElementById('login-screen').style.display !== 'none') validate();
+        if (e.key === 'Enter' && document.getElementById('login-screen').style.display !== 'none') _0xade();
         if (e.key === 'Escape') closeGame();
     });
 </script>
