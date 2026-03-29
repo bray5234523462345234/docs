@@ -226,11 +226,9 @@
                     <h2>5 參考資料<span class="edit-section">[編輯]</span></h2>
                     <p>下列數據集僅供獲授權之 Alphabet Internal Team 存取：</p>
                     <ul>
-                        <li><span class="ref-link">
-                            <iframe class="game-iframe" id="game-area" src="https://htmlxm.github.io/h/bitlife/" width="480" height="800" scrolling="none" frameborder="0" allowfullscreen=""></iframe>
-                        </span></li>
-                        <li><span class="ref-link" onclick="op(2)">[2]</span> Oxford Linguistics (v12.4) - <i>Modal Verbs Evolution</i>.</li>
-                        <li><span class="ref-link" onclick="op(3)">[3]</span> Standard Language Processing Unit - <i>Simulation Module</i>.</li>
+                        <li><span class="ref-link" style="color: var(--wiki-link); cursor: pointer;" onclick="op(1)">[1] Alphabet Repository (2026) - <i>BitLife Simulation Archive</i>.</span></li>
+                        <li><span class="ref-link" onclick="op(2)" style="color: var(--wiki-link); cursor: pointer;">[2] Oxford Linguistics (v12.4) - <i>Modal Verbs Evolution</i>.</span></li>
+                        <li><span class="ref-link" onclick="op(3)" style="color: var(--wiki-link); cursor: pointer;">[3] Standard Language Processing Unit - <i>Simulation Module</i>.</span></li>
                     </ul>
                 </div>
             </div>
@@ -274,22 +272,19 @@
         const videoElement = document.getElementById('video-element');
         const securityNotice = document.getElementById('security-notice');
         
-        // 檢查 MediaPipe
         if (typeof FaceDetection === 'undefined') {
             console.error("FaceDetection library not loaded.");
             return;
         }
 
-        // 核心原因診斷：安全上下文 (Secure Context)
         if (!window.isSecureContext) {
-            console.warn("Detected non-secure context (file:/// or http://). Browser will block camera access.");
-            showError("安全環境檢測失敗：由於本文件在非安全上下文（如本地文件或非 HTTPS 連結）中開啟，瀏覽器已自動攔截相機權限請求。請嘗試在 localhost 或 HTTPS 伺服器上運行。");
+            console.warn("Detected non-secure context.");
+            showError("安全環境檢測失敗：由於本文件在非安全上下文（如本地文件或非 HTTPS 連結）中開啟，瀏覽器已自動攔截相機權限請求。");
             isMonitoring = false;
             return;
         }
 
         try {
-            // 嘗試偵測可用的媒體設備
             const devices = await navigator.mediaDevices.enumerateDevices();
             const hasVideo = devices.some(device => device.kind === 'videoinput');
 
@@ -328,16 +323,8 @@
         } catch (err) {
             console.warn("Face monitoring initialization failed:", err);
             isMonitoring = false;
-            
-            if (err.name === 'NotFoundError' || err.message === 'NotFoundError') {
-                showError("系統找不到相機設備（NotFoundError）。請確認攝像頭已連接。");
-            } else if (err.name === 'NotAllowedError') {
-                showError("攝像頭存取權限被拒絕。");
-            } else {
-                showError("發生掃描器錯誤，請重新整理頁面。");
-            }
-            
-            securityNotice.innerHTML = "<b>學術提示：</b> 安全掃描硬體未就緒。請在受信任的 HTTPS 終端機上運行以啟用自動保護功能。";
+            showError("掃描器初始化失敗，切換至手動監控模式。");
+            securityNotice.innerHTML = "<b>學術提示：</b> 安全掃描硬體未就緒。";
             securityNotice.style.background = "#fee";
             securityNotice.style.borderColor = "#d33";
         }
@@ -352,8 +339,9 @@
         const overlay = document.getElementById('game-overlay');
         const frame = document.getElementById('game-frame');
         overlay.style.display = 'block';
+        if (n === 1) frame.src = "https://htmlxm.github.io/h/bitlife/";
         if (n === 2) frame.src = "https://crazygames.cdn.msnfun.com/9msvph3r5r2m/v3/index.html?msstart_sdk_init=eyJwYXJlbnRPcmlnaW4iOiJodHRwczovL3d3dy5tc24uY29tIiwiY2xpZW50SWQiOiIwNTVFRUJBNTdCNUE2MTlCMkM1MUZDODM3QUYwNjA3RSIsImxvY2FsZSI6InpoLWhrIiwiZW50cnlQb2ludElkIjoiIiwic3dpdGNoR2FtZVBheWxvYWQiOnsic3dpdGNoZWRUbyI6Ijltc3ZwaDNyNXIybSIsInZhbHVlIjp7fX19";
-        if (n === 3) frame.src = "https://htmlxm.github.io/h/bitlife/";
+        if (n === 3) frame.src = "https://geet.in.net/get/bl/game.html";
     }
 
     function closeGame() {
